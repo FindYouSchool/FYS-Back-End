@@ -11,65 +11,78 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  password String    @unique
-  username String?
-  profiles Profile[]
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String   @unique
+  username  String?
+  profile   Profile?
+  valid     Boolean  @default(false)
+  Notice    Notice[]
+  createdAt DateTime @default(now())
 }
 
 model Profile {
-  id          Int      @id @default(autoincrement())
-  etudiant    String[]
-  entreprise  String
-  intervenant String
-  employe     String
-  professeur  String[]
-  invite      String
-  ecole       String
-  notices     Notice[]
-  User        User?    @relation(fields: [userId], references: [id])
-  userId      Int?
+  id        Int      @id @default(autoincrement())
+  student   String[]
+  company   String
+  speaker   String
+  employee  String
+  teacher   Json?
+  guest     String
+  ecoleExp  String
+  notices   Notice[]
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?     @unique
+  valid     Boolean  @default(false)
+  avatar    Image    @relation(fields: [imageId], references: [id])
+  imageId   String   @unique
+  createdAt DateTime @default(now())
+
 }
 
 model Notice {
-  id            Int             @id @default(autoincrement())
-  SchoolId      Int
-  commentaire   String
-  Profile       Profile?        @relation(fields: [profileId], references: [id])
+  id            Int            @id @default(autoincrement())
+  comment       String         @db.Text
+  Profile       Profile?       @relation(fields: [profileId], references: [id])
   profileId     Int?
-  school        School[]
-  criteria_Mark Criteria_Mark[]
+  school        School?        @relation(fields: [schoolId], references: [id])
+  schoolId      Int?           @unique
+  criteria_Mark Criteria_Mark?
+  author        User?          @relation(fields: [authorId], references: [id])
+  authorId      Int
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
 
 }
 
 model School {
-  id                 Int             @id @default(autoincrement())
-  sectors            Sector[]
-  school_Domain      School_Domain[]
-  logo               Image           @relation(fields: [imageId], references: [id])
+  id                 Int            @id @default(autoincrement())
+  sectors            Sector?
+  schoolDomain       School_Domain?
+  logo               Image          @relation(fields: [imageId], references: [id])
   name               String
-  typeFormation      String[]
+  trainingType       String[]
   pointsForts        String[]
   pointsFaibles      String[]
-  localisation       String
-  notoriete          String
-  visionEcole        String
-  debouches          String[]
-  diplomeDelivre     String[]
+  location           String
+  notoriety          String
+  schoolVision       String
+  outlets            String[]
+  diplomaIssued      String[]
   campus             String[]
-  vieEcole           String[]
-  tarifs             String[]
-  frais              String[]
+  lifeSchool         String[]
+  prices             String[]
+  RegistrationFees   String[]
   capaciteAcceuil    Int
   conditionAdmission String[]
+  notice             Notice?
+  createdAt          DateTime       @default(now())
 
 
 
 
-  Notice   Notice? @relation(fields: [noticeId], references: [id])
-  noticeId Int?
-  imageId  String
+  imageId String @unique
 }
 
 model School_Domain {
@@ -77,26 +90,27 @@ model School_Domain {
 
 
   School   School? @relation(fields: [schoolId], references: [id])
-  schoolId Int?
+  schoolId Int?    @unique
   Domain   Domain? @relation(fields: [domainId], references: [id])
-  domainId Int?
+  domainId Int?    @unique
 }
 
 model Domain {
-  id            Int             @id @default(autoincrement())
-  school_Domain School_Domain[]
-  name          String
-  description   String
+  id            Int            @id @default(autoincrement())
+  school_Domain School_Domain?
+  name          String[]
+  description   String         @db.Text
+  domainId      Int?           @unique
 
 }
 
 model Sector {
-  id          Int          @id @default(autoincrement())
-  sector_Tag  Sector_Tag[]
-  name        String
-  description String
-  School      School?      @relation(fields: [schoolId], references: [id])
-  schoolId    Int?
+  id          Int         @id @default(autoincrement())
+  sector_Tag  Sector_Tag?
+  name        String[]
+  description String      @db.Text
+  School      School?     @relation(fields: [schoolId], references: [id])
+  schoolId    Int?        @unique
 }
 
 model Sector_Tag {
@@ -104,25 +118,25 @@ model Sector_Tag {
 
 
   Sector   Sector? @relation(fields: [sectorId], references: [id])
-  sectorId Int?
+  sectorId Int?    @unique
   Tag      Tag?    @relation(fields: [tagId], references: [id])
-  tagId    Int?
+  tagId    Int?    @unique
 }
 
 model Tag {
-  id         Int          @id @default(autoincrement())
-  name       String
-  sector_Tag Sector_Tag[]
+  id         Int         @id @default(autoincrement())
+  name       String[]
+  sector_Tag Sector_Tag?
 
 
 
 }
 
 model Criteria {
-  id            Int             @id @default(autoincrement())
-  name          String
+  id            Int            @id @default(autoincrement())
+  name          String[]
   description   String
-  criteria_Mark Criteria_Mark[]
+  criteria_Mark Criteria_Mark?
 
 }
 
@@ -130,16 +144,17 @@ model Criteria_Mark {
   id Int @id @default(autoincrement())
 
   Notice     Notice?   @relation(fields: [noticeId], references: [id])
-  noticeId   Int?
+  noticeId   Int?      @unique
   Criteria   Criteria? @relation(fields: [criteriaId], references: [id])
-  criteriaId Int?
-  note       Int?
+  criteriaId Int?      @unique
+  value      Int?      @default(0)
 }
 
 model Image {
-  id       String   @id @default(cuid())
-  publicId String   @unique
+  id       String    @id @default(cuid())
+  publicId String    @unique
   format   String
   version  String
-  school   School[]
+  school   School?
+  Profile  Profile[]
 }
