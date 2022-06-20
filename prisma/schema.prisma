@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  password String    @unique
+  username String?
+  profiles Profile[]
+}
+
+model Profile {
+  id          Int      @id @default(autoincrement())
+  etudiant    String[]
+  entreprise  String
+  intervenant String
+  employe     String
+  professeur  String[]
+  invite      String
+  ecole       String
+  notices     Notice[]
+  User        User?    @relation(fields: [userId], references: [id])
+  userId      Int?
+}
+
+model Notice {
+  id            Int             @id @default(autoincrement())
+  SchoolId      Int
+  commentaire   String
+  Profile       Profile?        @relation(fields: [profileId], references: [id])
+  profileId     Int?
+  school        School[]
+  criteria_Mark Criteria_Mark[]
+
+}
+
+model School {
+  id                 Int             @id @default(autoincrement())
+  sectors            Sector[]
+  school_Domain      School_Domain[]
+  logo               Image           @relation(fields: [imageId], references: [id])
+  name               String
+  typeFormation      String[]
+  pointsForts        String[]
+  pointsFaibles      String[]
+  localisation       String
+  notoriete          String
+  visionEcole        String
+  debouches          String[]
+  diplomeDelivre     String[]
+  campus             String[]
+  vieEcole           String[]
+  tarifs             String[]
+  frais              String[]
+  capaciteAcceuil    Int
+  conditionAdmission String[]
+
+
+
+
+  Notice   Notice? @relation(fields: [noticeId], references: [id])
+  noticeId Int?
+  imageId  String
+}
+
+model School_Domain {
+  id Int @id @default(autoincrement())
+
+
+  School   School? @relation(fields: [schoolId], references: [id])
+  schoolId Int?
+  Domain   Domain? @relation(fields: [domainId], references: [id])
+  domainId Int?
+}
+
+model Domain {
+  id            Int             @id @default(autoincrement())
+  school_Domain School_Domain[]
+  name          String
+  description   String
+
+}
+
+model Sector {
+  id          Int          @id @default(autoincrement())
+  sector_Tag  Sector_Tag[]
+  name        String
+  description String
+  School      School?      @relation(fields: [schoolId], references: [id])
+  schoolId    Int?
+}
+
+model Sector_Tag {
+  id Int @id @default(autoincrement())
+
+
+  Sector   Sector? @relation(fields: [sectorId], references: [id])
+  sectorId Int?
+  Tag      Tag?    @relation(fields: [tagId], references: [id])
+  tagId    Int?
+}
+
+model Tag {
+  id         Int          @id @default(autoincrement())
+  name       String
+  sector_Tag Sector_Tag[]
+
+
+
+}
+
+model Criteria {
+  id            Int             @id @default(autoincrement())
+  name          String
+  description   String
+  criteria_Mark Criteria_Mark[]
+
+}
+
+model Criteria_Mark {
+  id Int @id @default(autoincrement())
+
+  Notice     Notice?   @relation(fields: [noticeId], references: [id])
+  noticeId   Int?
+  Criteria   Criteria? @relation(fields: [criteriaId], references: [id])
+  criteriaId Int?
+  note       Int?
+}
+
+model Image {
+  id       String   @id @default(cuid())
+  publicId String   @unique
+  format   String
+  version  String
+  school   School[]
+}
