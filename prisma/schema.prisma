@@ -13,148 +13,233 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  password  String   @unique
-  username  String?
+  password  String
+  username  String
+  verified  Boolean  @default(false)
+  disabled  Boolean  @default(false)
   profile   Profile?
-  valid     Boolean  @default(false)
-  notices   Notice[]
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Profile {
   id        Int      @id @default(autoincrement())
-  student   String[]
-  company   String
-  speaker   String
-  employee  String
-  teacher   String[]
-  guest     Boolean  @default(true)
-  ecoleExp  String   @db.VarChar(250)
+  firstName String
+  lastName  String
+  gender    Gender
+  role      Role     @relation(fields: [roleId], references: [id])
+  roleId    Int
+  status    Boolean  @default(false)
+  avatar    String?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  proofs    Proof[]
   notices   Notice[]
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    Int?     @unique
-  valid     Boolean  @default(false)
-  avatar    Image    @relation(fields: [imageId], references: [id])
-  imageId   String   @unique
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
+model Role {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Profile Profile[]
+}
+
+model Proof {
+  id        Int      @id @default(autoincrement())
+  name      String
+  fileSrc   String
+  status    Boolean  @default(false)
+  profile   Profile? @relation(fields: [profileId], references: [id])
+  profileId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Notice {
   id            Int            @id @default(autoincrement())
   comment       String         @db.Text
-  profile       Profile?       @relation(fields: [profileId], references: [id])
-  profileId     Int?
-  school        School?        @relation(fields: [schoolId], references: [id])
-  schoolId      Int?           @unique
-  criteria_Mark Criteria_Mark?
-  author        User?          @relation(fields: [authorId], references: [id])
+  author        Profile        @relation(fields: [authorId], references: [id])
   authorId      Int
+  school        School         @relation(fields: [schoolId], references: [id])
+  schoolId      Int
+  criteriaMarks CriteriaMark[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-
-
-}
-
-model School {
-  id                 Int            @id @default(autoincrement())
-  sectors            Sector?
-  schoolDomain       School_Domain?
-  logo               Image          @relation(fields: [imageId], references: [id])
-  name               String
-  trainingType       String[]
-  pointsForts        String[]
-  pointsFaibles      String[]
-  location           String
-  notoriety          String
-  schoolVision       String
-  outlets            String[]
-  diplomaIssued      String[]
-  campus             String[]
-  lifeSchool         String[]
-  prices             String[]
-  RegistrationFees   String[]
-  capaciteAcceuil    Int
-  conditionAdmission String[]
-  notice             Notice?
-  createdAt          DateTime       @default(now())
-
-
-
-
-  imageId String @unique
-}
-
-model School_Domain {
-  id Int @id @default(autoincrement())
-
-
-  School   School? @relation(fields: [schoolId], references: [id])
-  schoolId Int?    @unique
-  Domain   Domain? @relation(fields: [domainId], references: [id])
-  domainId Int?    @unique
-}
-
-model Domain {
-  id            Int            @id @default(autoincrement())
-  school_Domain School_Domain?
-  name          String[]
-  description   String         @db.Text
-  domainId      Int?           @unique
-
-}
-
-model Sector {
-  id          Int         @id @default(autoincrement())
-  sector_Tag  Sector_Tag?
-  name        String[]
-  description String      @db.Text
-  School      School?     @relation(fields: [schoolId], references: [id])
-  schoolId    Int?        @unique
-}
-
-model Sector_Tag {
-  id Int @id @default(autoincrement())
-
-
-  Sector   Sector? @relation(fields: [sectorId], references: [id])
-  sectorId Int?    @unique
-  Tag      Tag?    @relation(fields: [tagId], references: [id])
-  tagId    Int?    @unique
-}
-
-model Tag {
-  id         Int         @id @default(autoincrement())
-  name       String[]
-  sector_Tag Sector_Tag?
-
-
-
 }
 
 model Criteria {
   id            Int            @id @default(autoincrement())
-  name          String[]
-  description   String
-  criteria_Mark Criteria_Mark?
-
+  name          String
+  description   String?
+  criteriaMarks CriteriaMark[]
 }
 
-model Criteria_Mark {
-  id Int @id @default(autoincrement())
+model CriteriaMark {
+  notice     Notice   @relation(fields: [noticeId], references: [id])
+  criteria   Criteria @relation(fields: [criteriaId], references: [id])
+  noticeId   Int
+  criteriaId Int
+  value      Float
 
-  notice     Notice?   @relation(fields: [noticeId], references: [id])
-  noticeId   Int?      @unique
-  Criteria   Criteria? @relation(fields: [criteriaId], references: [id])
-  criteriaId Int?      @unique
-  value      Int?      @default(0)
+  @@id([noticeId, criteriaId])
 }
 
-model Image {
-  id       String    @id @default(cuid())
-  publicId String    @unique
-  format   String
-  version  String
-  school   School?
-  profile  Profile[]
+model Domain {
+  id            Int            @id @default(autoincrement())
+  name          String
+  description   String?        @db.Text
+  parent        Domain?        @relation("DomainToDomain", fields: [parentId], references: [id])
+  parentId      Int?
+  children      Domain[]       @relation("DomainToDomain")
+  sectors       Sector[]
+  schoolDomains SchoolDomain[]
+}
+
+model Sector {
+  id                        Int                        @id @default(autoincrement())
+  name                      String
+  description               String?                    @db.Text
+  price                     Decimal
+  domain                    Domain                     @relation(fields: [domainId], references: [id])
+  domainId                  Int
+  school                    School                     @relation(fields: [schoolId], references: [id])
+  schoolId                  Int
+  sectorTags                SectorTag[]
+  training                  TrainingType               @relation(fields: [trainingTypeId], references: [id])
+  trainingTypeId            Int
+  sectorTrainingTypeImpacts SectorTrainingTypeImpact[]
+}
+
+model TrainingType {
+  id                        Int                        @id @default(autoincrement())
+  name                      String
+  sectors                   Sector[]
+  schoolTrainingTypes       SchoolTrainingType[]
+  sectorTrainingTypeImpacts SectorTrainingTypeImpact[]
+}
+
+model Tag {
+  id         Int         @id @default(autoincrement())
+  name       String
+  sectorTags SectorTag[]
+}
+
+model SectorTag {
+  sector   Sector @relation(fields: [sectorId], references: [id])
+  tag      Tag    @relation(fields: [tagId], references: [id])
+  sectorId Int
+  tagId    Int
+
+  @@id([sectorId, tagId])
+}
+
+model School {
+  id                  Int                  @id @default(autoincrement())
+  name                String
+  logo                String
+  description         String
+  shortDescription    String
+  devise              String?
+  notices             Notice[]
+  sectors             Sector[]
+  schoolDomains       SchoolDomain[]
+  campus              Campus[]
+  galleries           Gallery[]
+  SchoolTrainingTypes SchoolTrainingType[]
+}
+
+model SchoolTrainingType {
+  school         School       @relation(fields: [schoolId], references: [id])
+  training       TrainingType @relation(fields: [trainingTypeId], references: [id])
+  schoolId       Int
+  trainingTypeId Int
+
+  @@id([schoolId, trainingTypeId])
+}
+
+model SchoolDomain {
+  school   School @relation(fields: [schoolId], references: [id])
+  domain   Domain @relation(fields: [domainId], references: [id])
+  schoolId Int
+  domainId Int
+
+  @@id([schoolId, domainId])
+}
+
+model Campus {
+  id              Int             @id @default(autoincrement())
+  name            String
+  mail            String
+  phone           String
+  logo            String?
+  school          School          @relation(fields: [schoolId], references: [id])
+  adress          Adress          @relation(fields: [adressId], references: [id])
+  schoolId        Int
+  adressId        Int
+  campusGalleries CampusGallery[]
+}
+
+model CampusGallery {
+  gallery   Gallery @relation(fields: [galleryId], references: [id])
+  campus    Campus  @relation(fields: [campusId], references: [id])
+  galleryId Int
+  campusId  Int
+
+  @@id([galleryId, campusId])
+}
+
+model Gallery {
+  id              Int             @id @default(autoincrement())
+  link            String
+  legend          String
+  description     String?
+  cover           Boolean         @default(false)
+  school          School          @relation(fields: [schoolId], references: [id])
+  schoolId        Int
+  campusGalleries CampusGallery[]
+}
+
+model Adress {
+  id      Int      @id @default(autoincrement())
+  adress  String
+  adress2 String?
+  zipCode String
+  city    City     @relation(fields: [cityId], references: [id])
+  cityId  Int
+  campus  Campus[]
+}
+
+model City {
+  id         Int      @id @default(autoincrement())
+  name       String
+  department String?
+  contry     Contry   @relation(fields: [contryId], references: [id])
+  contryId   Int
+  adresses   Adress[]
+}
+
+model Contry {
+  id     Int    @id @default(autoincrement())
+  name   String
+  iso    String
+  cities City[]
+}
+
+model SectorTrainingTypeImpact {
+  sector         Sector       @relation(fields: [sectorId], references: [id])
+  tranning       TrainingType @relation(fields: [trainingTypeId], references: [id])
+  sectorId       Int
+  trainingTypeId Int
+
+  price Float
+
+
+  @@id([sectorId, trainingTypeId])
+}
+
+enum Gender {
+  MEN
+  FEMALE
+  OTHER
 }
