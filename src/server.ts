@@ -1,11 +1,10 @@
-import express from "express";
-import { PrismaClient } from "@prisma/client";
 import app from "./app";
+import { PrismaService } from "./services/PrismaService";
 
 const PORT = parseInt(process.env.PORT ?? "4001", 10);
 
 const bootstrap = (port: number) => {
-  const prisma = new PrismaClient();
+  const prisma = PrismaService.getInstance();
 
   prisma
     .$connect()
