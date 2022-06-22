@@ -1,10 +1,11 @@
+import { PrismaClient } from "@prisma/client";
 import app from "./app";
-import { PrismaService } from "./services/PrismaService";
+import { Container } from "./lib/di";
 
 const PORT = parseInt(process.env.PORT ?? "4001", 10);
 
 const bootstrap = (port: number) => {
-  const prisma = PrismaService.getInstance();
+  const prisma = Container.getInstance().resolve<PrismaClient>(PrismaClient);
 
   prisma
     .$connect()

@@ -1,19 +1,18 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../services/UsersRepository";
 import { UserModel } from "../models/UserModel";
-import {
-  BadRequestError,
-  MissingRequiredParameterError,
-  UnauthorizedError,
-} from "../errors";
+import { BadRequestError, MissingRequiredParameterError } from "../errors";
 import IUserString from "../interface/IUserString";
 import passcrypt from "../utils/passcrypt";
 import { HttpResponse } from "../utils/HttpResponse";
+import { Container } from "../lib/di";
+
 export class UsersController {
   protected repository: UsersRepository;
 
   constructor() {
-    this.repository = new UsersRepository();
+    this.repository =
+      Container.getInstance().resolve<UsersRepository>(UsersRepository);
   }
 
   async create(req: Request, res: Response) {
