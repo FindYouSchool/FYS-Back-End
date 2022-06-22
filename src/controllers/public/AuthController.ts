@@ -86,29 +86,9 @@ export class AuthController {
     const newUser = new UserModel(username, email, hashedPassword);
     const result = await this.repository.create(newUser);
 
-    // XSRF Token
-    const xsrfToken = await tokenHelper.generatedToken(32, { take: 32 });
-
-    // Access Token
-    const accessToken = await jwtHelper.encode<JwtPayload>(
-      { userId: result.id, email: result.email, xsrfToken },
-      jwtConfig.accessToken.secret,
-      jwtConfig.accessToken.expiresIn
-    );
-
-    // Access Token
-    const refreshToken = await jwtHelper.encode<JwtPayload>(
-      { userId: result.id, email: result.email, xsrfToken },
-      jwtConfig.refreshToken.secret,
-      jwtConfig.refreshToken.expiresIn
-    );
-
     return res.json(
       new HttpResponse(
         {
-          xsrfToken,
-          accessToken,
-          refreshToken,
           user: {
             id: result.id,
             email: result.email,
