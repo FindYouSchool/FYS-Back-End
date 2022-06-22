@@ -5,6 +5,7 @@ const cors = require("cors");
 
 import routes from "./routes";
 import { errorMiddleware } from "./middewares/errorMiddleware";
+import { notFoundMiddleware } from "./middewares/notFoundMiddleware";
 
 // env config
 dotenv.config();
@@ -23,6 +24,9 @@ app.use(express.json());
 
 // intall all routes in app
 app.use("/", routes);
+
+//
+app.all("*", notFoundMiddleware);
 
 app.use(errorMiddleware);
 
