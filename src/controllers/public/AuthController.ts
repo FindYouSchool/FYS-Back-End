@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
-import { UsersRepository } from "../services/UsersRepository";
-import { Container } from "../lib/di";
-import { ILoginString } from "../interface/ILoginString";
+import { UsersRepository } from "../../services/UsersRepository";
+import { Container } from "../../lib/di";
+import { ILoginString } from "../../interface/ILoginString";
 import {
   BadCredentialsError,
   BadRequestError,
   MissingRequiredParameterError,
   UnauthorizedError,
-} from "../errors";
-import passcrypt from "../utils/passcrypt";
-import jwtHelper, { JwtPayload } from "../utils/jwtHelper";
-import tokenHelper from "../utils/tokenHelper";
-import { jwtConfig } from "../configs/jwtConfig";
-import { HttpResponse } from "../utils/HttpResponse";
-import IUserString from "../interface/IUserString";
-import { UserModel } from "../models/UserModel";
+} from "../../errors";
+import passcrypt from "../../utils/passcrypt";
+import jwtHelper, { JwtPayload } from "../../utils/jwtHelper";
+import tokenHelper from "../../utils/tokenHelper";
+import { jwtConfig } from "../../configs/jwtConfig";
+import { HttpResponse } from "../../utils/HttpResponse";
+import IUserString from "../../interface/IUserString";
+import { UserModel } from "../../models/UserModel";
 
 export class AuthController {
   protected repository: UsersRepository;

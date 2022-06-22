@@ -109,4 +109,4 @@ export function decodedAccessToken<T>(
   return decode<T>(jwToken, jwtConfig.accessToken.secret);
 }
 
-export default {getTokenFromHeader, encode, decode, decodedAccessToken}
+export default { getTokenFromHeader, encode, decode, decodedAccessToken };

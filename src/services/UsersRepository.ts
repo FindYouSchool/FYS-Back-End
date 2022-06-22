@@ -1,6 +1,9 @@
-import { User } from "@prisma/client";
+import { Profile, User } from "@prisma/client";
 import { BaseRepository } from "./BaseRepository";
 
+type Account = Omit<User, "password" | "updatedAt"> & {
+  profile: Profile | null;
+};
 export class UsersRepository extends BaseRepository {
   get collection() {
     return this.prisma.user;
@@ -27,6 +30,23 @@ export class UsersRepository extends BaseRepository {
 
   async get(email: string): Promise<User | null> {
     return this.collection.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
+  async getAccount(email: string): Promise<Account | null> {
+    return this.collection.findUnique({
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        disabled: true,
+        verified: true,
+        createdAt: true,
+        profile: true,
+      },
       where: {
         email,
       },

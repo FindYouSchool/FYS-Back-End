@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { UsersRepository } from "../services/UsersRepository";
-import { Container } from "../lib/di";
+import { UsersRepository } from "../../services/UsersRepository";
+import { Container } from "../../lib/di";
 
 export class UsersController {
   protected repository: UsersRepository;
@@ -12,6 +12,13 @@ export class UsersController {
 
   async getAll(req: Request, res: Response) {
     const results = await this.repository.getAll();
-    res.json(results);
+
+    console.log("====================================");
+    console.log(req.getUserAuth());
+    console.log("====================================");
+
+    return res.json({
+      users: results,
+    });
   }
 }
