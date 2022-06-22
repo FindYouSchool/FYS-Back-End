@@ -9,4 +9,9 @@ const controller =
 
 routes.post("/login", controllerActionMiddleware(controller, controller.login));
 
+routes.post(
+  "/register",
+  controllerActionMiddleware(controller, controller.register)
+);
+
 export default routes;

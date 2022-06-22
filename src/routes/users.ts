@@ -1,10 +1,11 @@
-import { Request, Response, NextFunction, Router } from "express";
-import controller from "../controllers/UsersController";
+import { Router } from "express";
+import { UsersController } from "../controllers/UsersController";
+import { Container } from "../lib/di";
 import { controllerActionMiddleware } from "../middewares/controllerActionMiddleware";
 
 const routes = Router();
-
-routes.post("/", controllerActionMiddleware(controller, controller.create));
+const controller =
+  Container.getInstance().resolve<UsersController>(UsersController);
 
 routes.get("/", controllerActionMiddleware(controller, controller.getAll));
 
