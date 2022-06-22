@@ -10,7 +10,7 @@ export class UserModel implements Omit<User, "id" | "createdAt" | "updatedAt"> {
   constructor(username: string, email: string, password: string) {
     this.username = username;
     this.email = email;
-    this.password = password; //TODO crypt password
+    this.password = password;
     this.verified = false;
     this.disabled = false;
   }

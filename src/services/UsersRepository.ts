@@ -15,4 +15,12 @@ export class UsersRepository extends BaseRepository {
   async getAll(): Promise<User[]> {
     return this.collection.findMany();
   }
+
+  async get(email: string): Promise<User | null> {
+    return this.collection.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
 }

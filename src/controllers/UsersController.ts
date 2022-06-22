@@ -1,7 +1,14 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../services/UsersRepository";
 import { UserModel } from "../models/UserModel";
-import { UnauthorizedError } from "../errors";
+import {
+  BadRequestError,
+  MissingRequiredParameterError,
+  UnauthorizedError,
+} from "../errors";
+import IUserString from "../interface/IUserString";
+import passcrypt from "../utils/passcrypt";
+import { HttpResponse } from "../utils/HttpResponse";
 export class UsersController {
   protected repository: UsersRepository;
 
@@ -10,16 +17,26 @@ export class UsersController {
   }
 
   async create(req: Request, res: Response) {
-    const user = new UserModel("yves", "kamwa@gmail.com", "113");
-    const result = await this.repository.create(user);
-    res.json(result);
+    const { email, password, username } = req.body as IUserString;
+
+    if (!(email && password && username)) {
+      throw new MissingRequiredParameterError();
+    }
+
+    const user = await this.repository.get(email);
+
+    if (user) {
+      throw new BadRequestError("user alrady exist");
+    }
+
+    const hashedPassword = await passcrypt.hashPassword(password);
+    const newUser = new UserModel(username, email, hashedPassword);
+    const result = await this.repository.create(newUser);
+
+    res.status(200).json(new HttpResponse(result, "user create !"));
   }
 
   async getAll(req: Request, res: Response) {
-    if (1 < 2) {
-      throw new UnauthorizedError();
-    }
-
     const results = await this.repository.getAll();
     res.json(results);
   }
