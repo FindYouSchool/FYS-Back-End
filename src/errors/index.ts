@@ -1,4 +1,5 @@
 import HttpError, { HttpErrorOption } from "./HttpError";
+import DatabaseError from "./DatabaseError";
 
 /**
  * @class MissingRequiredParameterError
@@ -91,7 +92,7 @@ export class InternalServerError extends HttpError {
 }
 
 export type { HttpErrorOption };
-export { HttpError };
+export { HttpError, DatabaseError };
 export default {
   HttpError,
   MissingRequiredParameterError,
