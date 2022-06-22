@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-export const controllerActionMiddkeware =
+export const controllerActionMiddleware =
   <T extends Object>(instance: T, func: Function) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {

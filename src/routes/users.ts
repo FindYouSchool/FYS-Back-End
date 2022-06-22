@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction, Router } from "express";
 import controller from "../controllers/UsersController";
-import { controllerActionMiddkeware } from "../middewares/controllerActionMiddkeware";
+import { controllerActionMiddleware } from "../middewares/controllerActionMiddleware";
 
 const routes = Router();
 
-routes.post("/", controllerActionMiddkeware(controller, controller.create));
+routes.post("/", controllerActionMiddleware(controller, controller.create));
 
-routes.get("/", controllerActionMiddkeware(controller, controller.getAll));
+routes.get("/", controllerActionMiddleware(controller, controller.getAll));
 
 export default routes;
