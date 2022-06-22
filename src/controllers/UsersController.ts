@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../services/UsersRepository";
 import { UserModel } from "../models/UserModel";
-
+import { UnauthorizedError } from "../errors";
 export class UsersController {
   protected repository: UsersRepository;
 
@@ -16,6 +16,10 @@ export class UsersController {
   }
 
   async getAll(req: Request, res: Response) {
+    if (1 < 2) {
+      throw new UnauthorizedError();
+    }
+
     const results = await this.repository.getAll();
     res.json(results);
   }
