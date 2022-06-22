@@ -7,11 +7,11 @@ export async function hashPassword(
   return bcrypt.hash(password, salt);
 }
 
-export async function checkPasswordIsVakid(
+export async function checkPasswordIsValid(
   hashedPassword: string,
   password: string
 ): Promise<boolean> {
-  return bcrypt.compare(hashedPassword, password);
+  return bcrypt.compare(password, hashedPassword);
 }
 
-export default { hashPassword, checkPasswordIsVakid };
+export default { hashPassword, checkPasswordIsValid };
