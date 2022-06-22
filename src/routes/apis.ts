@@ -8,7 +8,7 @@ const routes = Router();
 // public route
 routes.use("/public", publicRoute);
 
-// public route
+// private route
 routes.use("/", [authMiddleware], privateRoute);
 
 export default routes;

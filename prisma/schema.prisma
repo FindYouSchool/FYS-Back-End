@@ -214,12 +214,12 @@ model City {
   id         Int      @id @default(autoincrement())
   name       String
   department String?
-  contry     Contry   @relation(fields: [contryId], references: [id])
+  country     Country   @relation(fields: [contryId], references: [id])
   contryId   Int
   adresses   Adress[]
 }
 
-model Contry {
+model Country {
   id     Int    @id @default(autoincrement())
   name   String
   iso    String
