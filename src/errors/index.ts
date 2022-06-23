@@ -56,6 +56,15 @@ export class InvalidTokenError extends HttpError {
 }
 
 /**
+ * @class ExpiredTokenError
+ */
+export class ExpiredTokenError extends HttpError {
+  constructor(message = "Expired token", info?: object) {
+    super({ type: "expired_token", message, info, status: 401 });
+  }
+}
+
+/**
  * @class ForbiddenError
  */
 export class ForbiddenError extends HttpError {
@@ -98,6 +107,7 @@ export default {
   MissingRequiredParameterError,
   BadCredentialsError,
   InvalidTokenError,
+  ExpiredTokenError,
   InternalServerError,
   ValidationError,
   ForbiddenError,

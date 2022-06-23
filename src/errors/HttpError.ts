@@ -36,9 +36,17 @@ export class HttpError extends Error implements HttpErrorOption {
     Error.captureStackTrace(this, this.constructor);
   }
 
-  getName(): string {
+  get name(): string {
     return this.constructor.name;
   }
+
+  public toJSON = (): object => ({
+    type: this.type,
+    message: this.expose ? this.message : undefined,
+    info: this.info,
+    success: false,
+    status: this.status,
+  });
 }
 
 export default HttpError;

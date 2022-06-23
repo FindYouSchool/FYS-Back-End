@@ -1,9 +1,10 @@
-import { PrismaService } from "./PrismaService";
+import { PrismaClient } from "@prisma/client";
+import { Container } from "../lib/di";
 
 export abstract class BaseRepository {
-  protected prisma: PrismaService;
+  protected prisma: PrismaClient;
 
   constructor() {
-    this.prisma = PrismaService.getInstance();
+    this.prisma = Container.getInstance().resolve<PrismaClient>(PrismaClient);
   }
 }

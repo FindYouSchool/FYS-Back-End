@@ -1,12 +1,14 @@
-import { Request, Response, Router } from "express";
-import users from "./users";
+import { Router } from "express";
+import publicRoute from "./public";
+import privateRoute from "./private";
+import { authMiddleware } from "../middewares/authMiddleware";
 
 const routes = Router();
 
-routes.get("/", (req: Request, res: Response) => {
-  res.json({ status: true, version: "1.0" });
-});
+// public route
+routes.use("/public", publicRoute);
 
-routes.use("/users", users);
+// public route
+routes.use("/", [authMiddleware], privateRoute);
 
 export default routes;

@@ -10,8 +10,4 @@ routes.get("/", (req: Request, res: Response) => {
 // Load api routes controllers
 routes.use("/api", apis);
 
-routes.get("*", (req: Request, res: Response) => {
-  res.status(404).send("<h1>Page not found</h1>");
-});
-
 export default routes;
