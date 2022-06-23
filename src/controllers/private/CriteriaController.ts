@@ -14,7 +14,7 @@ export class CriteriaController {
   async getAll(req: Request, res: Response) {
     const results = await this.repository.getAll();
     return res.json({
-      users: results,
+      criteria: results,
     });
   }
 }
