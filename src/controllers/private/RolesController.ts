@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { UsersRepository } from "../../services/UsersRepository";
 import { Container } from "../../lib/di";
-export class UsersController {
-  protected repository: UsersRepository;
+import { RoleRepository } from "../../services/RoleRepository";
+export class RolesController {
+  protected repository: RoleRepository;
 
   constructor() {
     this.repository =
-      Container.getInstance().resolve<UsersRepository>(UsersRepository);
+      Container.getInstance().resolve<RoleRepository>(RoleRepository);
   }
 
   async getAll(req: Request, res: Response) {
