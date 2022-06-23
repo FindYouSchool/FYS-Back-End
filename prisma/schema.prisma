@@ -57,7 +57,6 @@ model Proof {
 }
 
 model Notice {
-  id            Int            @id @default(autoincrement())
   comment       String         @db.Text
   author        Profile        @relation(fields: [authorId], references: [id])
   authorId      Int
@@ -66,6 +65,8 @@ model Notice {
   criteriaMarks CriteriaMark[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+
+  @@id([authorId, schoolId])
 }
 
 model Criteria {
@@ -76,13 +77,14 @@ model Criteria {
 }
 
 model CriteriaMark {
-  notice     Notice   @relation(fields: [noticeId], references: [id])
-  criteria   Criteria @relation(fields: [criteriaId], references: [id])
-  noticeId   Int
-  criteriaId Int
-  value      Float
+  notice         Notice   @relation(fields: [noticeAuthorId, noticeSchoolId], references: [authorId, schoolId])
+  criteria       Criteria @relation(fields: [criteriaId], references: [id])
+  noticeAuthorId Int
+  noticeSchoolId Int
+  criteriaId     Int
+  value          Float
 
-  @@id([noticeId, criteriaId])
+  @@id([noticeAuthorId, noticeSchoolId, criteriaId])
 }
 
 model Domain {

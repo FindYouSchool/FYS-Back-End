@@ -10,4 +10,9 @@ const controller =
 
 routes.get("/", controllerActionMiddleware(controller, controller.getAll));
 
+routes.get(
+  "/:filterName",
+  controllerActionMiddleware(controller, controller.filterByName)
+);
+
 export default routes;

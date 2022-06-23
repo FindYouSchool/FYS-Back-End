@@ -16,4 +16,19 @@ export class SchoolsController {
       schools,
     });
   }
+
+  async filterByName(req: Request, res: Response) {
+    const filterName = String(req.params.filterName).trim();
+
+    if (!filterName.length) {
+      return res.json({
+        schools: [],
+      });
+    }
+
+    const schools = await this.repository.filterByName(filterName);
+    return res.json({
+      schools,
+    });
+  }
 }
