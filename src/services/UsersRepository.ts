@@ -13,6 +13,6 @@ export class UsersRepository extends BaseRepository {
   }
 
   async getAll(): Promise<User[]> {
-    return this.collection.findMany();
+    return this.collection.findMany({});
   }
 }
