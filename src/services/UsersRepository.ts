@@ -13,9 +13,6 @@ export class UsersRepository extends BaseRepository {
     return this.collection.create({ data: user });
   }
 
-  // async getAll(): Promise<User[]> {
-  // return this.collection.findMany({});
-
   async getAll(): Promise<Omit<User, "password" | "updatedAt">[]> {
     return this.collection.findMany({
       select: {
