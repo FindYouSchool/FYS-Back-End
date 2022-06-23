@@ -52,20 +52,8 @@ export async function authMiddleware(
       throw new UnauthorizedError(`User ${payload.email} not exists`);
     }
     // Check that the user account in health
-    if (!(!user.disabled && user.verified)) {
+    if (!!user.disabled) {
       throw new ForbiddenError("Access is denied for account restriction");
-    }
-
-    //
-    if (!user.profile) {
-      throw new ForbiddenError(
-        "Access is denied for account is not completed",
-        {
-          user: {
-            email: user.email,
-          },
-        }
-      );
     }
 
     // Save authenticated user to response

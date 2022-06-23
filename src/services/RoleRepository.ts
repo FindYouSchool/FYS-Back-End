@@ -14,7 +14,7 @@ export class RoleRepository extends BaseRepository {
     return this.collection.findMany();
   }
 
-  async get(name: string): Promise<Role | null> {
+  async getByName(name: string): Promise<Role | null> {
     return this.collection.findUnique({
       where: {
         name,

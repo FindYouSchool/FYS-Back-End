@@ -7,9 +7,9 @@ export class ProfileRepository extends BaseRepository {
   }
 
   async create(
-    role: Omit<Profile, "id" | "createdAt" | "updatedAt">
+    profile: Omit<Profile, "id" | "createdAt" | "updatedAt">
   ): Promise<Profile> {
-    return this.collection.create({ data: role });
+    return this.collection.create({ data: profile });
   }
 
   async geByUserId(userId: number, joinUser = false): Promise<Profile | null> {
