@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=production node dist/server.js",
-    "start:dev": "set debug=* && NODE_ENV=development ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts"
+    "start:dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts"
   },
   "keywords": [],
   "author": "",
