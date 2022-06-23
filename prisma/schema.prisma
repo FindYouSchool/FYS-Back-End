@@ -136,7 +136,7 @@ model SectorTag {
 
 model School {
   id                  Int                  @id @default(autoincrement())
-  name                String
+  name                String               @unique
   logo                String
   description         String
   shortDescription    String
