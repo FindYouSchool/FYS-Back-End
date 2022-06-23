@@ -136,17 +136,17 @@ model SectorTag {
 
 model School {
   id                  Int                  @id @default(autoincrement())
-  name                String
+  name                String               @unique
   logo                String
   description         String
   shortDescription    String
   devise              String?
   notices             Notice[]
   sectors             Sector[]
-  schoolDomains       SchoolDomain[]
+  domains             SchoolDomain[]
   campus              Campus[]
   galleries           Gallery[]
-  SchoolTrainingTypes SchoolTrainingType[]
+  schoolTrainingTypes SchoolTrainingType[]
 }
 
 model SchoolTrainingType {
