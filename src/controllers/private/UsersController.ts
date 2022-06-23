@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { UsersRepository } from "../../services/UsersRepository";
 import { Container } from "../../lib/di";
-import { UserProfile } from "../../common/UserProfile";
-
 export class UsersController {
   protected repository: UsersRepository;
 
