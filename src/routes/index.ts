@@ -8,6 +8,6 @@ routes.get("/", (req: Request, res: Response) => {
 });
 
 // Load api routes controllers
-routes.use("/api", apis);
+routes.use("/api/v1", apis);
 
 export default routes;
