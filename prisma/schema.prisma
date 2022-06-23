@@ -143,10 +143,10 @@ model School {
   devise              String?
   notices             Notice[]
   sectors             Sector[]
-  schoolDomains       SchoolDomain[]
+  domains             SchoolDomain[]
   campus              Campus[]
   galleries           Gallery[]
-  SchoolTrainingTypes SchoolTrainingType[]
+  schoolTrainingTypes SchoolTrainingType[]
 }
 
 model SchoolTrainingType {

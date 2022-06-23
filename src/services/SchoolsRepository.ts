@@ -11,7 +11,25 @@ export class SchoolsRepository extends BaseRepository {
   }
 
   async getAll(): Promise<School[]> {
-    return this.collection.findMany();
+    return this.collection.findMany({
+      include: {
+        sectors: {
+          include: {
+            sectorTrainingTypeImpacts: {
+              include: {
+                tranning: true,
+              },
+            },
+          },
+        },
+        campus: true,
+        domains: {
+          include: {
+            domain: true,
+          },
+        },
+      },
+    });
   }
 
   async getByName(name: string): Promise<School | null> {
