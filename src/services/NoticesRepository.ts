@@ -6,8 +6,40 @@ export class NoticesRepository extends BaseRepository {
     return this.prisma.notice;
   }
 
-  async create(school: Notice): Promise<Notice> {
-    return this.collection.create({ data: school });
+  async create(
+    notice: Omit<Notice, "updatedAt" | "createdAt">
+  ): Promise<Omit<Notice, "updatedAt" | "createdAt">> {
+    return this.collection.create({ data: notice });
+  }
+
+  async getByMultyId(
+    authorId: number,
+    schoolId: number
+  ): Promise<Pick<Notice, "authorId" | "schoolId" | "comment"> | null> {
+    return this.collection.findUnique({
+      select: {
+        authorId: true,
+        schoolId: true,
+        comment: true,
+      },
+      where: {
+        authorId_schoolId: {
+          authorId,
+          schoolId,
+        },
+      },
+    });
+  }
+
+  async deleteByMultyId(authorId: number, schoolId: number) {
+    return this.collection.delete({
+      where: {
+        authorId_schoolId: {
+          authorId,
+          schoolId,
+        },
+      },
+    });
   }
 
   async avgSchoolGrade(schoolId: number) {

@@ -5,7 +5,7 @@ export const restrictionMiddleware =
   (callback: (req: Request) => boolean, errorCallback: () => HttpError) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (callback(req)) {
+      if (!callback(req)) {
         throw errorCallback();
       }
       next();

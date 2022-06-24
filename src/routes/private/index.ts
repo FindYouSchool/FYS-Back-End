@@ -5,6 +5,7 @@ import { ForbiddenError } from "../../errors";
 import users from "./users";
 import profiles from "./profiles";
 import roles from "./roles";
+import notices from "./notices";
 
 const routes = Router();
 
@@ -24,4 +25,7 @@ routes.use(
     () => new ForbiddenError("the user must already have a completed profile")
   )
 );
+
+routes.use("/notices", notices);
+
 export default routes;

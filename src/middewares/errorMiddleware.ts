@@ -28,7 +28,7 @@ export async function errorMiddleware(
         );
     }
 
-    if (!error.isHttpError) console.log("Error", error);
+    if (!error.expose) console.log("Error", error);
   }
 
   if (res.headersSent) {
