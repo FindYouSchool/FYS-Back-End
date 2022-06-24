@@ -27,11 +27,11 @@ export class ProfileController {
 
   async get(req: Request, res: Response) {
     //
-    const profile = req.getUserAuth<UserProfile>().profile;
+    const user = req.getUserAuth<UserProfile>();
 
     res.json(
       new HttpResponse({
-        profile,
+        ...user,
       })
     );
   }
