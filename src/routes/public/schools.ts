@@ -15,4 +15,9 @@ routes.get(
   controllerActionMiddleware(controller, controller.filterByName)
 );
 
+routes.get(
+  "/:schoolid([0-9]+)/grade",
+  controllerActionMiddleware(controller, controller.schoolGrade)
+);
+
 export default routes;
