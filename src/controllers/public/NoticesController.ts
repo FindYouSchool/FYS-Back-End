@@ -3,6 +3,7 @@ import { BadRequestError, MissingRequiredParameterError } from "../../errors";
 import { Container } from "../../lib/di";
 import { NoticesRepository } from "../../services/NoticesRepository";
 import { SchoolsRepository } from "../../services/SchoolsRepository";
+import { HttpResponse } from "../../utils/HttpResponse";
 
 export class NoticesController {
   protected noticeRepository: NoticesRepository;
@@ -31,14 +32,26 @@ export class NoticesController {
       });
     }
 
-    const a = (await this.noticeRepository.avgSchoolGrade(school.id))[0];
-
     const notices = await this.noticeRepository.getBySchoolId(school.id);
 
-    return res.json({
-      ...school,
-      rating: parseFloat(a._avg.value?.toFixed(1) ?? "0.0"),
-      notices,
-    });
+    if (notices.length) {
+      const a = (await this.noticeRepository.avgSchoolGrade(school.id))[0];
+
+      return res.json(
+        new HttpResponse({
+          ...school,
+          rating: parseFloat(a._avg.value?.toFixed(1) ?? "0.0"),
+          notices,
+        })
+      );
+    }
+
+    return res.json(
+      new HttpResponse({
+        ...school,
+        rating: 0.0,
+        notices: [],
+      })
+    );
   }
 }
