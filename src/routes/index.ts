@@ -4,7 +4,9 @@ import apis from "./apis";
 const routes = Router();
 
 routes.get("/", (req: Request, res: Response) => {
-  res.send('<h1>Please go to <a href="/api">api</a> to see all api route</h1>');
+  res.send(
+    '<h1>Please go to <a href="/api/v1">api</a> to see all api route</h1>'
+  );
 });
 
 // Load api routes controllers
